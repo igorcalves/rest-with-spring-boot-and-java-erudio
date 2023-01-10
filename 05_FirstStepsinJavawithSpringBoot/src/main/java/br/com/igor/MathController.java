@@ -4,33 +4,46 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import ControllerMathOperations.Operations;
+
 @RestController
 public class MathController {
-    
-    @GetMapping(value="/sum/{numberOne}/{numberTwo}")
-    public Double sum(@PathVariable("numberOne") String numberOne,
-                      @PathVariable("numberTwo") String numberTwo) throws Exception {
-        if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
-            throw new Exception();
-        }
-        return covertToDouble(numberOne) + covertToDouble(numberTwo);
-    }    
-    
-    public static Double covertToDouble(String strNumber) {
-        if (strNumber == null) return 0d; 
-        String number = strNumber.replaceAll(",", ".");
-        if (isNumeric(number)) return Double.parseDouble(number);
-        return 1.0d;
-    }
+	
+	private static Operations operations = new Operations();
 
-    public static boolean isNumeric(String strNumber) {
-        if (strNumber == null) return false; 
-        String number = strNumber.replaceAll(",", ".");
-        return number.matches("[-+]?[0-9]*\\.?[0-9]+");
+	@GetMapping(value = "/sum/{numberOne}/{numberTwo}")
+	public Double sum(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) {
+			
+		return operations.sum(numberOne, numberTwo);
+	}
 
-    }
+	@GetMapping(value = "/sub/{numberOne}/{numberTwo}")
+	public Double sub(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) {
+		return operations.subtraction(numberOne, numberTwo);
+		
+	}
+
+	@GetMapping(value = "/mult/{numberOne}/{numberTwo}")
+	public Double mult(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) {
+		
+		return operations.multiplication(numberOne, numberTwo);
+	}
+
+	@GetMapping(value = "/div/{numberOne}/{numberTwo}")
+	public Double div(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) {
+			return operations.division(numberOne, numberTwo);
+	}
+
+	@GetMapping(value = "/mean/{numberOne}/{numberTwo}")
+	public Double mean(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) {
+		return operations.mean(numberOne, numberTwo);
+	}
+
+	@GetMapping(value = "/squareRoot/{numberOne}")
+	public Double squareRoot(@PathVariable("numberOne") String numberOne) {
+
+		return operations.squareRoot(numberOne);
+	}
+
+	
 }
-	
-	
-
-
