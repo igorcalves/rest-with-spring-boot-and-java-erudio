@@ -28,12 +28,8 @@ public class PersonServices {
 
 	public Person findById(Long id) {
 		logger.info("Finding one person!");
-		Person person = new Person();
-		person.setFirstName("igor");
-		person.setLastName("Alves");
-		person.setAdress("Diadema -  São Paulo - Brasil");
-		person.setGender("Male");
-		return reposity.findById(id).orElseThrow(()->new ResourceNotFoundException("No records found for this ID!"));
+		return reposity.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("No records found for this ID!"));
 	}
 
 	public Person create(Person person) {
