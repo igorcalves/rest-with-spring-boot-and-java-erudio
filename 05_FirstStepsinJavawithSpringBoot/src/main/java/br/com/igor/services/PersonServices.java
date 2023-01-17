@@ -1,14 +1,16 @@
 package br.com.igor.services;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.igor.data.vo.v1.PersonVO;
+import br.com.igor.data.vo.v2.PersonVOV2;
 import br.com.igor.exceptions.ResourceNotFoundException;
+import br.com.igor.mapper.DozerMapper;
+import br.com.igor.mapper.custom.PersonMapper;
 import br.com.igor.model.Person;
 import br.com.igor.repositories.PersonRepository;
 
@@ -16,52 +18,59 @@ import br.com.igor.repositories.PersonRepository;
 public class PersonServices {
 
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
-	
+
 	@Autowired
 	PersonRepository reposity;
-
-	public List<Person> findAll() {
-		logger.info("Finding all people!");
-		return reposity.findAll();
-
-	}
-
-	public Person findById(Long id) {
-		logger.info("Finding one person!");
-		return reposity.findById(id)
-				.orElseThrow(()->new ResourceNotFoundException("No records found for this ID!"));
-	}
-
-	public Person create(Person person) {
-		logger.info("Create one person!");
-		return reposity.save(person);
-	}
 	
-	public Person update(Person person) {
-		
+	@Autowired
+	PersonMapper mapper;
+
+	public List<PersonVO> findAll() {
+		logger.info("Finding all people!");
+		return DozerMapper.parseListObjects(reposity.findAll(), PersonVO.class);
+
+	}
+
+	public PersonVO findById(Long id) {
+		logger.info("Finding one person!");
+		var entity = reposity.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
+		return DozerMapper.parseObject(entity, PersonVO.class);
+	}
+
+	public PersonVO create(PersonVO person) {
+
+		var entity = DozerMapper.parseObject(person, Person.class);
 		logger.info("Create one person!");
-		var entity = reposity.findById(person.getId()).orElseThrow(()->new ResourceNotFoundException("No records found for this ID!"));
+		var vo = DozerMapper.parseObject(reposity.save(entity), PersonVO.class);
+		return vo;
+	}
+	public PersonVOV2 createV2(PersonVOV2 person) {
+		
+		var entity = mapper.convertVOtoEntity(person);
+		logger.info("Create one person!");
+		var vo = mapper.convertEntityToVO(reposity.save(entity));
+		return vo;
+	}
+
+	public PersonVO update(PersonVO person) {
+
+		logger.info("Create one person!");
+		var entity = reposity.findById(person.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 		entity.setFirstName(person.getFirstName());
 		entity.setLastName(person.getLastName());
-		entity.setAdress(person.getAdress());
+		entity.setAddress(person.getAddress());
 		entity.setGender(person.getGender());
-		return reposity.save(entity);
+		var vo = DozerMapper.parseObject(reposity.save(entity), PersonVO.class);
+		return vo;
 	}
-	
+
 	public void delete(Long id) {
-		var entity = reposity.findById(id).orElseThrow(()->new ResourceNotFoundException("No records found for this ID!"));
+		var entity = reposity.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 		reposity.delete(entity);
 		logger.info("Deleting one person!");
 	}
-	
-	private Person mockPerson(int i) {
-
-		Person person = new Person();
-		person.setFirstName("Person Name " + i);
-		person.setLastName("Last Name " + i);
-		person.setAdress("Some address in Brasil " + i);
-		person.setGender("Male ");
-		return person;
-	}
-
 }
