@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import br.com.igor.Controllers.PersonController;
 import br.com.igor.data.vo.v1.PersonVO;
 import br.com.igor.data.vo.v2.PersonVOV2;
+import br.com.igor.exceptions.RequiredObjectIsNullException;
 import br.com.igor.exceptions.ResourceNotFoundException;
 import br.com.igor.mapper.DozerMapper;
 import br.com.igor.mapper.custom.PersonMapper;
@@ -49,7 +50,8 @@ public class PersonServices {
 	}
 
 	public PersonVO create(PersonVO person) {
-
+		
+		if(person == null) throw new RequiredObjectIsNullException();
 		var entity = DozerMapper.parseObject(person, Person.class);
 		logger.info("Create one person!");
 		var vo = DozerMapper.parseObject(reposity.save(entity), PersonVO.class);
@@ -65,7 +67,7 @@ public class PersonServices {
 	}
 
 	public PersonVO update(PersonVO person) {
-
+		if(person == null) throw new RequiredObjectIsNullException();
 		logger.info("Create one person!");
 		var entity = reposity.findById(person.getKey())
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
