@@ -14,14 +14,14 @@ public class OpenApiCOnfig {
 	public OpenAPI customOpenAPI() {
 		return new OpenAPI()
 			.info(new Info()
-				.title("RESTful API with Java 18 and Spring Boot 3")
+				.title("RESTful API with Java 19 and Spring Boot 3")
 				.version("v1")
-				.description("Some description about your API")
-				.termsOfService("https://pub.erudio.com.br/meus-cursos")
+				.description("My First API RestFul")
+				.termsOfService("https://pub.igor.com.br/meus-cursos")
 				.license(
 					new License()
 						.name("Apache 2.0")
-						.url("https://pub.erudio.com.br/meus-cursos")
+						.url("https://pub.igor.com.br/my-Spring")
 					)
 				);
 	}
