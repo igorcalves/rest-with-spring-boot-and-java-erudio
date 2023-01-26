@@ -1,0 +1,95 @@
+package br.com.igor.data.vo.v1;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.dozermapper.core.Mapping;
+
+@JsonPropertyOrder({ "id","text","author","lauch_date","price" })
+public class BookVO implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
+	@Mapping("id")
+	@JsonProperty("id")
+	private Integer key;
+	
+	@JsonProperty("author")
+	private String author;
+	
+	@JsonProperty("lauch_date")
+	private LocalDate laucheDate;
+	
+	@JsonProperty("price")
+	private Double price;
+	
+	@JsonProperty("text")
+	private String text;
+	
+	public BookVO() {
+	}
+
+	public Integer getKey() {
+		return key;
+	}
+
+	public void setKey(Integer key) {
+		this.key = key;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public LocalDate getLaucheDate() {
+		return laucheDate;
+	}
+
+	public void setLaucheDate(LocalDate laucheDate) {
+		this.laucheDate = laucheDate;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(author, key, laucheDate, price, text);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BookVO other = (BookVO) obj;
+		return Objects.equals(author, other.author) && Objects.equals(key, other.key)
+				&& Objects.equals(laucheDate, other.laucheDate) && Objects.equals(price, other.price)
+				&& Objects.equals(text, other.text);
+	}
+
+ 
+}
