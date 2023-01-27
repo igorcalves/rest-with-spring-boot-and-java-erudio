@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 
-@JsonPropertyOrder({ "id","text","author","lauch_date","price" })
-public class BookVO implements Serializable {
+@JsonPropertyOrder({ "id","title","author","launch_date","price" })
+public class BookVO extends RepresentationModel<BookVO> implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -20,14 +22,14 @@ public class BookVO implements Serializable {
 	@JsonProperty("author")
 	private String author;
 	
-	@JsonProperty("lauch_date")
-	private LocalDate laucheDate;
+	@JsonProperty("launch_date")
+	private LocalDate launchDate;
 	
 	@JsonProperty("price")
 	private Double price;
 	
-	@JsonProperty("text")
-	private String text;
+	@JsonProperty("title")
+	private String title;
 	
 	public BookVO() {
 	}
@@ -48,12 +50,12 @@ public class BookVO implements Serializable {
 		this.author = author;
 	}
 
-	public LocalDate getLaucheDate() {
-		return laucheDate;
+	public LocalDate getLaunchDate() {
+		return launchDate;
 	}
 
-	public void setLaucheDate(LocalDate laucheDate) {
-		this.laucheDate = laucheDate;
+	public void setLaunchDate(LocalDate laucheDate) {
+		this.launchDate = laucheDate;
 	}
 
 	public Double getPrice() {
@@ -64,17 +66,18 @@ public class BookVO implements Serializable {
 		this.price = price;
 	}
 
-	public String getText() {
-		return text;
+
+	public String getTitle() {
+		return title;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, key, laucheDate, price, text);
+		return Objects.hash(author, key, launchDate, price, title);
 	}
 
 	@Override
@@ -87,8 +90,8 @@ public class BookVO implements Serializable {
 			return false;
 		BookVO other = (BookVO) obj;
 		return Objects.equals(author, other.author) && Objects.equals(key, other.key)
-				&& Objects.equals(laucheDate, other.laucheDate) && Objects.equals(price, other.price)
-				&& Objects.equals(text, other.text);
+				&& Objects.equals(launchDate, other.launchDate) && Objects.equals(price, other.price)
+				&& Objects.equals(title, other.title);
 	}
 
  

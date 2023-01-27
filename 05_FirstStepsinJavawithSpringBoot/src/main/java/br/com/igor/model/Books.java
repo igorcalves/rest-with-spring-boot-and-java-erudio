@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Book implements Serializable {
+public class Books implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -20,16 +20,16 @@ public class Book implements Serializable {
 	@Column(name = "author", nullable = false, length = 255)
 	private String author;
 	
-	@Column(name = "lauch_date", nullable = false, columnDefinition = "DATE")
-	private LocalDate laucheDate;
+	@Column(name = "launch_date", nullable = false, columnDefinition = "DATE")
+	private LocalDate launchDate;
 	
 	@Column(name ="price",precision = 10, scale = 2)
 	private Double price;
 	
-	@Column(name = "text",nullable = false, length = 255)
-	private String text;
+	@Column(name = "title",nullable = false, length = 255)
+	private String title;
 	
-	public Book() {
+	public Books() {
 	}
 
 	public int getId() {
@@ -48,12 +48,12 @@ public class Book implements Serializable {
 		this.author = author;
 	}
 
-	public LocalDate getLaucheDate() {
-		return laucheDate;
+	public LocalDate getLaunchDate() {
+		return launchDate;
 	}
 
-	public void setLaucheDate(LocalDate laucheDate) {
-		this.laucheDate = laucheDate;
+	public void setLaunchDate(LocalDate laucheDate) {
+		this.launchDate = laucheDate;
 	}
 
 	public Double getPrice() {
@@ -64,17 +64,17 @@ public class Book implements Serializable {
 		this.price = price;
 	}
 
-	public String getText() {
-		return text;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setTitle(String text) {
+		this.title = text;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, id, laucheDate, price, text);
+		return Objects.hash(author, id, launchDate, price, title);
 	}
 
 	@Override
@@ -85,9 +85,9 @@ public class Book implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Book other = (Book) obj;
-		return Objects.equals(author, other.author) && id == other.id && Objects.equals(laucheDate, other.laucheDate)
-				&& Objects.equals(price, other.price) && Objects.equals(text, other.text);
+		Books other = (Books) obj;
+		return Objects.equals(author, other.author) && id == other.id && Objects.equals(launchDate, other.launchDate)
+				&& Objects.equals(price, other.price) && Objects.equals(title, other.title);
 	}  
 	 
 	

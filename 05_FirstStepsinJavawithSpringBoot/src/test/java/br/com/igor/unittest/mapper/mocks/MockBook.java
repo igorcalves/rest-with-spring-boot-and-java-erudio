@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.igor.data.vo.v1.BookVO;
-import br.com.igor.model.Book;
+import br.com.igor.model.Books;
 
 public class MockBook {
 
-	public Book mockEntity() {
+	public Books mockEntity() {
 		return mockEntity(0);
 	}
 
@@ -17,8 +17,8 @@ public class MockBook {
 		return mockVO(0);
 	}
 
-	public List<Book> mockEntityList() {
-		List<Book> persons = new ArrayList<Book>();
+	public List<Books> mockEntityList() {
+		List<Books> persons = new ArrayList<Books>();
 		for (int i = 0; i < 14; i++) {
 			persons.add(mockEntity(i));
 		}
@@ -33,13 +33,13 @@ public class MockBook {
 		return persons;
 	}
 
-	public Book mockEntity(Integer number) {
-		Book book = new Book();
+	public Books mockEntity(Integer number) {
+		Books book = new Books();
 		book.setAuthor("Authro Test"+ number);
 		book.setId(number);
-		book.setLaucheDate(LocalDate.of(1, 1, 1));
+		book.setLaunchDate(LocalDate.of(1, 1, 1));
 		book.setPrice(0.00);
-		book.setText("Text Test"+ number);
+		book.setTitle("Text Test"+ number);
 		return book;
 	}
 
@@ -47,9 +47,9 @@ public class MockBook {
 		BookVO bookVO = new BookVO();
 		bookVO.setAuthor("Authro Test"+ number);
 		bookVO.setKey(number);
-		bookVO.setLaucheDate(LocalDate.of(1, 1, 1));
+		bookVO.setLaunchDate(LocalDate.of(1, 1, 1));
 		bookVO.setPrice(0.00);
-		bookVO.setText("Text Test"+ number);
+		bookVO.setTitle("Text Test"+ number);
 		
 		return bookVO;
 		
