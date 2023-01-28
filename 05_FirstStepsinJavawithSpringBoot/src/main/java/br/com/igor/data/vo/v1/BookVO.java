@@ -1,11 +1,12 @@
 package br.com.igor.data.vo.v1;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
@@ -23,7 +24,8 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
 	private String author;
 	
 	@JsonProperty("launch_date")
-	private LocalDate launchDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date launchDate;
 	
 	@JsonProperty("price")
 	private Double price;
@@ -50,11 +52,11 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
 		this.author = author;
 	}
 
-	public LocalDate getLaunchDate() {
+	public Date getLaunchDate() {
 		return launchDate;
 	}
 
-	public void setLaunchDate(LocalDate laucheDate) {
+	public void setLaunchDate(Date laucheDate) {
 		this.launchDate = laucheDate;
 	}
 

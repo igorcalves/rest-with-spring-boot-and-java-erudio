@@ -1,12 +1,13 @@
 package br.com.igor.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
@@ -15,13 +16,14 @@ public class Books implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Column(name = "author", nullable = false, length = 255)
 	private String author;
 	
 	@Column(name = "launch_date", nullable = false, columnDefinition = "DATE")
-	private LocalDate launchDate;
+	private Date launchDate;
 	
 	@Column(name ="price",precision = 10, scale = 2)
 	private Double price;
@@ -48,11 +50,11 @@ public class Books implements Serializable {
 		this.author = author;
 	}
 
-	public LocalDate getLaunchDate() {
+	public Date getLaunchDate() {
 		return launchDate;
 	}
 
-	public void setLaunchDate(LocalDate laucheDate) {
+	public void setLaunchDate(Date laucheDate) {
 		this.launchDate = laucheDate;
 	}
 

@@ -2,14 +2,14 @@ package br.com.igor.unittests.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import br.com.igor.data.vo.v1.BookVO;
-import br.com.igor.data.vo.v1.PersonVO;
 import br.com.igor.mapper.DozerMapper;
 import br.com.igor.model.Books;
 import br.com.igor.unittest.mapper.mocks.MockBook;
@@ -17,6 +17,8 @@ import br.com.igor.unittest.mapper.mocks.MockBook;
 public class DozerConverterBookTest {
     
     MockBook inputObject;
+    
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     @BeforeEach
     public void setUp() {  
@@ -24,8 +26,8 @@ public class DozerConverterBookTest {
     }
 
     @Test
-    public void parseEntityToVOTest() {
-    	LocalDate dmock = LocalDate.of(1, 1, 1);
+    public void parseEntityToVOTest() throws Exception{
+    	Date dmock = sdf.parse("11/11/1111");
         BookVO output = DozerMapper.parseObject(inputObject.mockEntity(), BookVO.class);
         
         assertEquals(0, output.getKey());
@@ -37,8 +39,8 @@ public class DozerConverterBookTest {
     }
     
     @Test
-    public void parseEntityListToVOListTest() {
-    	LocalDate dmock = LocalDate.of(1, 1, 1);
+    public void parseEntityListToVOListTest()throws Exception {
+    	Date dmock = sdf.parse("11/11/1111");
         List<BookVO> outputList = DozerMapper.parseListObjects(inputObject.mockEntityList(), BookVO.class);
         BookVO outputZero = outputList.get(0);
         
@@ -66,8 +68,8 @@ public class DozerConverterBookTest {
     }
     
     @Test
-    public void parseVOToEntityTest() {
-    	LocalDate dmock = LocalDate.of(1, 1, 1);
+    public void parseVOToEntityTest()throws Exception {
+    	Date dmock = sdf.parse("11/11/1111");
         Books output = DozerMapper.parseObject(inputObject.mockVO(),Books.class);
         
         assertEquals(0, output.getId());
@@ -79,8 +81,8 @@ public class DozerConverterBookTest {
     }
     
     @Test
-    public void parseVOListToEntityListTest() {
-    	LocalDate dmock = LocalDate.of(1, 1, 1);
+    public void parseVOListToEntityListTest()throws Exception {
+    	Date dmock = sdf.parse("11/11/1111");
         List<Books> outputList = DozerMapper.parseListObjects(inputObject.mockVOList(), Books.class);
         Books outputZero = outputList.get(0);
         
