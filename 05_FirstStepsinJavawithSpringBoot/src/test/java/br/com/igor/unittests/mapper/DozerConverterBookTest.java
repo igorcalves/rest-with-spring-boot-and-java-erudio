@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import br.com.igor.data.vo.v1.BookVO;
 import br.com.igor.mapper.DozerMapper;
-import br.com.igor.model.Books;
+import br.com.igor.model.Book;
 import br.com.igor.unittest.mapper.mocks.MockBook;
 
 public class DozerConverterBookTest {
@@ -70,7 +70,7 @@ public class DozerConverterBookTest {
     @Test
     public void parseVOToEntityTest()throws Exception {
     	Date dmock = sdf.parse("11/11/1111");
-        Books output = DozerMapper.parseObject(inputObject.mockVO(),Books.class);
+        Book output = DozerMapper.parseObject(inputObject.mockVO(),Book.class);
         
         assertEquals(0, output.getId());
         assertEquals("Authro Test0", output.getAuthor());
@@ -83,8 +83,8 @@ public class DozerConverterBookTest {
     @Test
     public void parseVOListToEntityListTest()throws Exception {
     	Date dmock = sdf.parse("11/11/1111");
-        List<Books> outputList = DozerMapper.parseListObjects(inputObject.mockVOList(), Books.class);
-        Books outputZero = outputList.get(0);
+        List<Book> outputList = DozerMapper.parseListObjects(inputObject.mockVOList(), Book.class);
+        Book outputZero = outputList.get(0);
         
         assertEquals(0, outputZero.getId());
         assertEquals("Authro Test0", outputZero.getAuthor());
@@ -92,7 +92,7 @@ public class DozerConverterBookTest {
         assertEquals(dmock, outputZero.getLaunchDate());
         assertEquals(0.00, outputZero.getPrice());
         
-        Books outputSeven = outputList.get(7);
+        Book outputSeven = outputList.get(7);
         
         assertEquals(7, outputSeven.getId());
         assertEquals("Authro Test7", outputSeven.getAuthor());
@@ -100,7 +100,7 @@ public class DozerConverterBookTest {
         assertEquals(dmock, outputSeven.getLaunchDate());
         assertEquals(0.00, outputSeven.getPrice());
         
-        Books outputTwelve = outputList.get(12);
+        Book outputTwelve = outputList.get(12);
         
         assertEquals(12, outputTwelve.getId());
         assertEquals("Authro Test12", outputTwelve.getAuthor());

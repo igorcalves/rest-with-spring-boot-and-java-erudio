@@ -9,9 +9,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
-public class Books implements Serializable {
+@Table(name = "books")
+public class Book implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -22,7 +26,8 @@ public class Books implements Serializable {
 	@Column(name = "author", nullable = false, length = 255)
 	private String author;
 	
-	@Column(name = "launch_date", nullable = false, columnDefinition = "DATE")
+	@Column(name = "launch_date", nullable = false)
+	@Temporal(TemporalType.DATE)
 	private Date launchDate;
 	
 	@Column(name ="price",precision = 10, scale = 2)
@@ -31,7 +36,7 @@ public class Books implements Serializable {
 	@Column(name = "title",nullable = false, length = 255)
 	private String title;
 	
-	public Books() {
+	public Book() {
 	}
 
 	public int getId() {
@@ -87,7 +92,7 @@ public class Books implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Books other = (Books) obj;
+		Book other = (Book) obj;
 		return Objects.equals(author, other.author) && id == other.id && Objects.equals(launchDate, other.launchDate)
 				&& Objects.equals(price, other.price) && Objects.equals(title, other.title);
 	}  

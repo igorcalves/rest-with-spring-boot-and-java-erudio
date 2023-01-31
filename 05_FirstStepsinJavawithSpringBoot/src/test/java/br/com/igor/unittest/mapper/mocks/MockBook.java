@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.igor.data.vo.v1.BookVO;
-import br.com.igor.model.Books;
+import br.com.igor.model.Book;
 
 public class MockBook {
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	public Books mockEntity() throws Exception{
+	public Book mockEntity() throws Exception{
 		return mockEntity(0);
 	}
 
@@ -19,8 +19,8 @@ public class MockBook {
 		return mockVO(0);
 	}
 
-	public List<Books> mockEntityList()throws Exception {
-		List<Books> persons = new ArrayList<Books>();
+	public List<Book> mockEntityList()throws Exception {
+		List<Book> persons = new ArrayList<Book>();
 		for (int i = 0; i < 14; i++) {
 			persons.add(mockEntity(i));
 		}
@@ -35,8 +35,8 @@ public class MockBook {
 		return persons;
 	}
 
-	public Books mockEntity(Integer number) throws Exception{
-		Books book = new Books();
+	public Book mockEntity(Integer number) throws Exception{
+		Book book = new Book();
 		book.setAuthor("Authro Test"+ number);
 		book.setId(number);
 		book.setLaunchDate(sdf.parse("11/11/1111"));

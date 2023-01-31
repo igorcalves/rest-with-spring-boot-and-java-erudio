@@ -119,7 +119,7 @@ public class BookController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	@Operation(summary = "delete a People by id", description = "delete a Poeple by id",
+	@Operation(summary = "delete a Book by id", description = "delete a Book by id",
 	tags = {"People"},
 	responses = {
 			@ApiResponse(description = "No Content", responseCode = "204",content = {@Content}),
