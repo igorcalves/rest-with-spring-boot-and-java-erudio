@@ -1,40 +1,35 @@
-package br.com.igor.data.vo.v1;
+package br.com.igor.integrationstests.vo;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import org.springframework.hateoas.RepresentationModel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.github.dozermapper.core.Mapping;
-
-@JsonPropertyOrder({ "id", "firstName", "lastName", "address", "gender" })
-public class PersonVO extends RepresentationModel<PersonVO> implements Serializable {
+public class PersonVOTest  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Mapping("id")
-	@JsonProperty("id")
-	private Long key;
-
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String address;
-
-//	@JsonIgnore
 	private String gender;
 
-	public PersonVO() {
+	public PersonVOTest() {
 	}
 
-	public Long getKey() {
-		return key;
+
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setKey(Long key) {
-		this.key = key;
+
+
+	public void setId(Long id) {
+		this.id = id;
 	}
+
+
 
 	public String getFirstName() {
 		return firstName;
@@ -68,10 +63,14 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
 		this.gender = gender;
 	}
 
+
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, firstName, gender, key, lastName);
+		return Objects.hash(address, firstName, gender, id, lastName);
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -81,11 +80,12 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PersonVO other = (PersonVO) obj;
+		PersonVOTest other = (PersonVOTest) obj;
 		return Objects.equals(address, other.address) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(gender, other.gender) && Objects.equals(key, other.key)
+				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
 				&& Objects.equals(lastName, other.lastName);
 	}
+
 
 	
 
