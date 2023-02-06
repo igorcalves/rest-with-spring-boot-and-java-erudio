@@ -26,8 +26,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 //@CrossOrigin
 @RestController
-@RequestMapping("/person/v1")
-@Tag(name = "people", description = "Endpoints for Managing People ")
+@RequestMapping("api/person/v1")
+@Tag(name = "People", description = "Endpoints for Managing People ")
 public class PersonController {
 
 	@Autowired

@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/book/v1")
+@RequestMapping("api/book/v1")
 @Tag(name = "Book", description = "Endpoints for Managing Books ")
 public class BookController {
 	
@@ -41,7 +41,7 @@ public class BookController {
 						MediaType.APPLICATION_XML,
 						MediaType.APPLICATION_YML})
 	@Operation(summary = "Adds a new Book in JSON, XML or YML", description = "Adds a new  People in JSON, XML or YML",
-	tags = {"People"},
+	tags = {"Book"},
 	responses = {
 			@ApiResponse(description = "Success", responseCode = "200",
 					content = @Content(schema = @Schema(implementation = PersonVO.class))),
@@ -58,7 +58,7 @@ public class BookController {
 			MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_YML})
 	@Operation(summary = "Finds a Book", description = "Finds a Book",
-	tags = {"People"},
+	tags = {"Book"},
 	responses = {
 			@ApiResponse(description = "Success", responseCode = "200",
 					content = @Content(schema = @Schema(implementation = PersonVO.class))),
@@ -77,7 +77,7 @@ public class BookController {
 			MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_YML})
 	@Operation(summary = "Finds all Books", description = "Finds All Books",
-	tags = {"People"},
+	tags = {"Book"},
 	responses = {
 			@ApiResponse(description = "Success", responseCode = "200",
 					content = {
@@ -105,7 +105,7 @@ public class BookController {
 						MediaType.APPLICATION_XML,
 						MediaType.APPLICATION_YML})
 	@Operation(summary = "Update  a Book by parsing in a JSON ,XML or YML", description = "Update  a Book by parsing in a JSON ,XML or YML",
-	tags = {"People"},
+	tags = {"Book"},
 	responses = {
 			@ApiResponse(description = "Success", responseCode = "200",
 					content = @Content(schema = @Schema(implementation = PersonVO.class))),
@@ -120,7 +120,7 @@ public class BookController {
 	
 	@DeleteMapping(value = "/{id}")
 	@Operation(summary = "delete a Book by id", description = "delete a Book by id",
-	tags = {"People"},
+	tags = {"Book"},
 	responses = {
 			@ApiResponse(description = "No Content", responseCode = "204",content = {@Content}),
 			@ApiResponse(description = "Bad Request", responseCode = "400",content = {@Content}),
