@@ -103,6 +103,7 @@ public class JwtTokenProvider {
 		DecodedJWT decodedJWT = verifier.verify(token);
 		return decodedJWT;
 	}
+
 	
 	public String resolveToken(HttpServletRequest req) {
 		String bearerToken = req.getHeader("Authorization");

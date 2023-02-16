@@ -1,7 +1,6 @@
 package br.com.igor.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import org.springframework.security.core.GrantedAuthority;
 

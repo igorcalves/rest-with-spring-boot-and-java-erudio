@@ -18,13 +18,13 @@ public class AuthServices {
 
 	@Autowired
 	private JwtTokenProvider tokenProvider;
-	
+
 	@Autowired
-	private AuthenticationManager authenticationManager;
-	
+	private AuthenticationManager authenticationManager;	
+
 	@Autowired
 	private UserRepository repository;
-	
+
 	@SuppressWarnings("rawtypes")
 	public ResponseEntity signin(AccountCredentialsVO data) {
 		
@@ -32,19 +32,33 @@ public class AuthServices {
 			var username = data.getUsername();
 			var password = data.getPassword();
 			
- 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 			
 			var user = repository.findByUserName(username);
+			System.out.println(user.getUsername() +" "+ this.getClass());
+			
 			var tokenReponse = new TokenVO();
 			if (user != null) {
 				tokenReponse = tokenProvider.createAccessToken(username, user.getRoles());
-			}else {
-				throw new UsernameNotFoundException("Username " + username + "not found!");
 			}
 			return ResponseEntity.ok(tokenReponse);
 			
 		} catch (Exception e) {
 		throw new BadCredentialsException("invalid username/password supplied");
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public ResponseEntity refreshToken(String username, String refreshToken) {
+		var user = repository.findByUserName(username);
+		
+		var tokenReponse = new TokenVO();
+		if (user != null) {
+			tokenReponse = tokenProvider.refreshToken(refreshToken);
+		} else {
+			throw new UsernameNotFoundException("Username " + username + "not found!");
+		}
+		return ResponseEntity.ok(tokenReponse);
 	}
 }

@@ -58,7 +58,7 @@ class BookServicesTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</book/v1/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
 		assertEquals(1, result.getKey());
         assertEquals("Authro Test1", result.getAuthor());
         assertEquals("Text Test1", result.getTitle());
@@ -83,7 +83,7 @@ class BookServicesTest {
 		assertNotNull(bookOne);
 		assertNotNull(bookOne.getKey());
 		assertNotNull(bookOne.getLinks());
-		assertTrue(bookOne.toString().contains("links: [</book/v1/1>;rel=\"self\"]"));
+		assertTrue(bookOne.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
 		assertEquals(1, bookOne.getKey());
         assertEquals("Authro Test1", bookOne.getAuthor());
         assertEquals("Text Test1", bookOne.getTitle());
@@ -95,7 +95,7 @@ class BookServicesTest {
 		assertNotNull(bookFour);
 		assertNotNull(bookFour.getKey());
 		assertNotNull(bookFour.getLinks());
-		assertTrue(bookFour.toString().contains("links: [</book/v1/4>;rel=\"self\"]"));
+		assertTrue(bookFour.toString().contains("links: [</api/book/v1/4>;rel=\"self\"]"));
 		assertEquals(4, bookFour.getKey());
         assertEquals("Authro Test4", bookFour.getAuthor());
         assertEquals("Text Test4", bookFour.getTitle());
@@ -107,7 +107,7 @@ class BookServicesTest {
 		assertNotNull(bookSeven);
 		assertNotNull(bookSeven.getKey());
 		assertNotNull(bookSeven.getLinks());
-		assertTrue(bookSeven.toString().contains("links: [</book/v1/7>;rel=\"self\"]"));
+		assertTrue(bookSeven.toString().contains("links: [</api/book/v1/7>;rel=\"self\"]"));
 		assertEquals(7, bookSeven.getKey());
         assertEquals("Authro Test7", bookSeven.getAuthor());
         assertEquals("Text Test7", bookSeven.getTitle());
@@ -133,7 +133,7 @@ class BookServicesTest {
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
 
-		assertTrue(result.toString().contains("links: [</book/v1/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
 		assertEquals("Authro Test1", result.getAuthor());
         assertEquals("Text Test1", result.getTitle());
         assertEquals(dmock, result.getLaunchDate());
@@ -171,7 +171,7 @@ class BookServicesTest {
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
 
-		assertTrue(result.toString().contains("links: [</book/v1/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
 		assertEquals("Authro Test1", result.getAuthor());
         assertEquals("Text Test1", result.getTitle());
         assertEquals(dmock, result.getLaunchDate());

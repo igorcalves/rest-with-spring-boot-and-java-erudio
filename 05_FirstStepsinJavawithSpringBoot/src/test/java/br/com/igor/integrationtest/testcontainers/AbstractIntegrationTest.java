@@ -1,45 +1,45 @@
 package br.com.igor.integrationtest.testcontainers;
 
 
+import java.util.Map;
 import java.util.stream.Stream;
 
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.aot.AotApplicationContextInitializer;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.lifecycle.Startables;
 
-import java.util.Map;
-
-@ContextConfiguration(initializers =  AbstractIntegrationTest.Initializer.class)
+@ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
 public class AbstractIntegrationTest {
-	
-	static public class Initializer implements AotApplicationContextInitializer<ConfigurableApplicationContext>{
-		static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.32");
+
+	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+		
+		static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.29");
 		
 		private static void startContainers() {
 			Startables.deepStart(Stream.of(mysql)).join();
 		}
 
-		private static Map<String, String> CreateConnectionConfiguration() {
+		private static Map<String, String> createConnectionConfiguration() {
 			return Map.of(
-					"spring.datasource.url:", mysql.getJdbcUrl(),
-					"spring.datasource.username:", mysql.getUsername(),
-					"spring.datasource.password:", mysql.getPassword()
-					);
+				"spring.datasource.url", mysql.getJdbcUrl(),
+				"spring.datasource.username", mysql.getUsername(),
+				"spring.datasource.password", mysql.getPassword()
+			);
 		}
-		@SuppressWarnings({"unchecked","rawtypes"})
+		
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		@Override
 		public void initialize(ConfigurableApplicationContext applicationContext) {
 			startContainers();
-			ConfigurableEnvironment enviroment = applicationContext.getEnvironment();
-			MapPropertySource testcontainers = new MapPropertySource("testcontainers", 
-					(Map)CreateConnectionConfiguration());
-			enviroment.getPropertySources().addFirst(testcontainers);
+			ConfigurableEnvironment environment = applicationContext.getEnvironment();
+			MapPropertySource testcontainers = new MapPropertySource(
+				"testcontainers",
+				(Map) createConnectionConfiguration());
+			environment.getPropertySources().addFirst(testcontainers);
 		}
-
 	}
-
 }

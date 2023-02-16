@@ -1,11 +1,9 @@
-package br.com.igor.integrationstests.controller.withjson;
+package br.com.igor.integrationstests.controller.cors.withjson;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +31,7 @@ import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class PersonControllerJsonTest extends AbstractIntegrationTest {
+public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
 
 	private static RequestSpecification specification;
 	private static ObjectMapper ObjectMapper;
@@ -112,7 +109,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertEquals("Male", createPerson.getGender());
 	}
 
-	
 
 	@Test
 	@Order(2)
@@ -147,7 +143,6 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertEquals("Metropolis", createPerson.getAddress());
 		assertEquals("Male", createPerson.getGender());
 	}
-
 	@Test
 	@Order(3)
 	public void testUpdate() throws Exception {
@@ -203,66 +198,28 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertEquals(newPersonPut.getAddress(), "Metropolis");
 		assertEquals(newPersonPut.getGender(),"Female");
 	}
-
-	@Test
-	@Order(4)
-	public void delete() throws Exception {
-		given().spec(specification)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-					.pathParam("id", person.getId())
-					.when()
-					.delete("{id}")
-				.then()
-					.statusCode(204);
-	}
 	
 	@Test
-	@Order(5)
-	public void findALL() throws Exception {
-		
+	@Order(4)
+	public void testCreateWithWrongOrigin() throws Exception {
+		mockPerson();
+
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.when()
-				.get()
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_IGARU)
+				.body(person)
+					.when()
+					.post()
 				.then()
-				.statusCode(200)
-				.extract()
-				.body()
-					.asString();
-				//.as(new TypeRef<List<PersonVO>>() {});
-		
-		List<PersonVO> people = ObjectMapper.readValue(content, new TypeReference<List<PersonVO>>() {});
-		PersonVO foundPersonOne = people.get(0);
-		
-		assertNotNull(foundPersonOne);
-		assertNotNull(foundPersonOne.getId());
-		assertNotNull(foundPersonOne.getFirstName());
-		assertNotNull(foundPersonOne.getLastName());
-		assertNotNull(foundPersonOne.getGender());
-		
-		assertTrue(foundPersonOne.getId() > 0);
-		
-		assertEquals("Ayrton", foundPersonOne.getFirstName());
-		assertEquals("Senna", foundPersonOne.getLastName());
-		assertEquals("São Paulo", foundPersonOne.getAddress());
-		assertEquals("Male", foundPersonOne.getGender());
+				.statusCode(403)
+					.extract()
+					.body()
+						.asString();
+
+		assertNotNull(content);
+		assertEquals("Invalid CORS request", content);
 	}
-	@Order(6)
-	public void findAllWithoutToken() throws Exception {
-		
-		RequestSpecification specificationWithoutToken = specification = new RequestSpecBuilder()
-				.setBasePath("/api/person/v1")
-				.setPort(TestConfigs.SERVER_PORT)
-					.addFilter(new RequestLoggingFilter(LogDetail.ALL))
-					.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
-		given().spec(specificationWithoutToken)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.when()
-				.get()
-				.then()
-				.statusCode(403);
-	}
+
 	private void mockPerson() {
 		person.setFirstName("Super");
 		person.setLastName("Man");

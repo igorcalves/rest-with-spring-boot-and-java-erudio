@@ -3,8 +3,11 @@ package br.com.igor.integrationstests.vo;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-public class PersonVOTest  implements Serializable {
+
+@XmlRootElement
+public class PersonVO  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,7 +17,7 @@ public class PersonVOTest  implements Serializable {
 	private String address;
 	private String gender;
 
-	public PersonVOTest() {
+	public PersonVO() {
 	}
 
 
@@ -80,7 +83,7 @@ public class PersonVOTest  implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		PersonVOTest other = (PersonVOTest) obj;
+		PersonVO other = (PersonVO) obj;
 		return Objects.equals(address, other.address) && Objects.equals(firstName, other.firstName)
 				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
 				&& Objects.equals(lastName, other.lastName);
