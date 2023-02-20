@@ -24,7 +24,6 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
 	private String author;
 	
 	@JsonProperty("launch_date")
-	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date launchDate;
 	
 	@JsonProperty("price")

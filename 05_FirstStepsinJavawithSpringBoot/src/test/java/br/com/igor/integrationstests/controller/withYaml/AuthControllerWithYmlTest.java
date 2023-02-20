@@ -1,13 +1,11 @@
 package br.com.igor.integrationstests.controller.withYaml;
 
 
+import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-
-import static io.restassured.RestAssured.given;
-
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -17,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.igor.configs.TestConfigs;
-import br.com.igor.integrationstests.controller.withYaml.mapper.YAMLMapper;
+import br.com.igor.integrationstests.controller.withYml.mapper.YmlMapper;
 import br.com.igor.integrationstests.vo.AccountCredentialsVO;
 import br.com.igor.integrationstests.vo.TokenVO;
 import br.com.igor.integrationtest.testcontainers.AbstractIntegrationTest;
@@ -33,14 +31,14 @@ import io.restassured.specification.RequestSpecification;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class AuthControllerWithYMLlTest extends AbstractIntegrationTest{
+public class AuthControllerWithYmlTest extends AbstractIntegrationTest{
 	
 	private static TokenVO tokenVO;
-	private static YAMLMapper objectMapper;
+	private static YmlMapper objectMapper;
 	
 	@BeforeAll
 	public static void setup() {
-		objectMapper = new YAMLMapper();
+		objectMapper = new YmlMapper();
 	}
 	
 	@Test
@@ -77,7 +75,6 @@ public class AuthControllerWithYMLlTest extends AbstractIntegrationTest{
 	@Test
 	@Order(2) 
 	public void testRefresh() throws JsonMappingException, JsonProcessingException {
-		AccountCredentialsVO user = new AccountCredentialsVO("Igor", "4044");
 		
 		var newTokenVO = given()
 				.config(RestAssuredConfig

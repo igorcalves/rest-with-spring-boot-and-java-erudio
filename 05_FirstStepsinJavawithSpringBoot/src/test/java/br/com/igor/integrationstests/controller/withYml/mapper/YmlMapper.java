@@ -1,4 +1,4 @@
-package br.com.igor.integrationstests.controller.withYaml.mapper;
+package br.com.igor.integrationstests.controller.withYml.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -10,7 +10,7 @@ import io.restassured.mapper.ObjectMapper;
 import io.restassured.mapper.ObjectMapperDeserializationContext;
 import io.restassured.mapper.ObjectMapperSerializationContext;
 
-public class YAMLMapper implements ObjectMapper{
+public class YmlMapper implements ObjectMapper{
 	
 	private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
 	
@@ -18,7 +18,7 @@ public class YAMLMapper implements ObjectMapper{
 	
 	
 
-	public YAMLMapper() {
+	public YmlMapper() {
 		objectMapper = new com.fasterxml.jackson.databind.ObjectMapper(new YAMLFactory());
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		typeFactory = TypeFactory.defaultInstance();
