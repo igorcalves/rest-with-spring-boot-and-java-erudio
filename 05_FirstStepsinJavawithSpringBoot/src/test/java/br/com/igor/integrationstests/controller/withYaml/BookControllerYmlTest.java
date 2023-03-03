@@ -24,6 +24,8 @@ import br.com.igor.data.vo.v1.security.TokenVO;
 import br.com.igor.integrationstests.controller.withYml.mapper.YmlMapper;
 import br.com.igor.integrationstests.vo.AccountCredentialsVO;
 import br.com.igor.integrationstests.vo.BookVO;
+import br.com.igor.integrationstests.vo.pagedmodels.PagedModelBook;
+import br.com.igor.integrationstests.vo.pagedmodels.PagedModelPerson;
 import br.com.igor.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -241,24 +243,25 @@ public class BookControllerYmlTest extends AbstractIntegrationTest {
 	@Order(5)
 	public void findALL() throws Exception {
 		
-		var content = given().spec(specification)
+		var wrapper = given().spec(specification)
 				.config(RestAssuredConfig
 						.config()
 						.encoderConfig(EncoderConfig.encoderConfig()
 								.encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 					.contentType(TestConfigs.CONTENT_TYPE_YML)
 					.accept(TestConfigs.CONTENT_TYPE_YML)
+					.queryParam("page",0,"size",3,"direction","asc")
 				.when()
 					.get()
 				.then()
 					.statusCode(200)
 						.extract()
 							.body()
-								.as(BookVO[].class,objectMapper);
+								.as(PagedModelBook.class,objectMapper);
 			
 		
-		List<BookVO> people = Arrays.asList(content);
-		BookVO foundBookOne = people.get(0);
+		var book = wrapper.getContent();
+		BookVO foundBookOne = book.get(0);
 		
 		assertNotNull(foundBookOne);
 		assertNotNull(foundBookOne.getTitle());
@@ -269,9 +272,9 @@ public class BookControllerYmlTest extends AbstractIntegrationTest {
 		
 		assertTrue(foundBookOne.getId() > 0);
 		
-		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-		assertEquals(49.00, foundBookOne.getPrice());
-		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals("Big Data: como extrair volume, variedade, velocidade e valor da avalanche de informação cotidiana", foundBookOne.getTitle());
+		assertEquals(54.0, foundBookOne.getPrice());
+		assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", foundBookOne.getAuthor());
 	}
 	@Order(6)
 	public void findAllWithoutToken() throws Exception {

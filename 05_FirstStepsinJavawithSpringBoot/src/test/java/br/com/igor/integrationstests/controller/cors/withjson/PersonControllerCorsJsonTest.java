@@ -225,6 +225,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
 		person.setLastName("Man");
 		person.setAddress("Metropolis");
 		person.setGender("Male");
+		person.setEnabled(true);
 
 	}
 

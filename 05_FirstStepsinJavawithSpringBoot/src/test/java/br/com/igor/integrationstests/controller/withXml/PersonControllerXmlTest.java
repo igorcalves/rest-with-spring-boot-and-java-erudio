@@ -1,11 +1,10 @@
 package br.com.igor.integrationstests.controller.withXml;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -24,6 +22,7 @@ import br.com.igor.configs.TestConfigs;
 import br.com.igor.data.vo.v1.security.TokenVO;
 import br.com.igor.integrationstests.vo.AccountCredentialsVO;
 import br.com.igor.integrationstests.vo.PersonVO;
+import br.com.igor.integrationstests.vo.pagedmodels.PagedModelPerson;
 import br.com.igor.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -105,6 +104,7 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 		assertNotNull(createPerson.getFirstName());
 		assertNotNull(createPerson.getLastName());
 		assertNotNull(createPerson.getGender());
+		assertTrue(createPerson.getEnabled());
 
 		assertTrue(createPerson.getId() > 0);
 
@@ -118,6 +118,41 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 
 	@Test
 	@Order(2)
+	public void testDisablePersonById() throws Exception {
+		mockPerson();
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+					.accept(TestConfigs.CONTENT_TYPE_XML)
+					.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_IGOR)
+				.pathParam("id", person.getId())
+					.when()
+				.patch("{id}")
+					.then()
+						.statusCode(200)
+							.extract()
+								.body()
+									.asString();
+		
+		PersonVO createPerson = ObjectMapper.readValue(content, PersonVO.class);
+		person = createPerson;
+		
+		assertNotNull(createPerson);
+		assertNotNull(createPerson.getId());
+		assertNotNull(createPerson.getFirstName());
+		assertNotNull(createPerson.getLastName());
+		assertNotNull(createPerson.getGender());
+		assertFalse(createPerson.getEnabled());
+		
+		assertTrue(createPerson.getId() > 0);
+		
+		assertEquals("Super", createPerson.getFirstName());
+		assertEquals("Man", createPerson.getLastName());
+		assertEquals("Metropolis", createPerson.getAddress());
+		assertEquals("Male", createPerson.getGender());
+	}
+	@Test
+	@Order(3)
 	public void testFindById() throws Exception {
 		mockPerson();
 
@@ -142,7 +177,8 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 		assertNotNull(createPerson.getFirstName());
 		assertNotNull(createPerson.getLastName());
 		assertNotNull(createPerson.getGender());
-
+		assertFalse(createPerson.getEnabled());
+		
 		assertTrue(createPerson.getId() > 0);
 
 		assertEquals("Super", createPerson.getFirstName());
@@ -152,7 +188,7 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(3)
+	@Order(4)
 	public void testUpdate() throws Exception {
 		mockPerson();
 		
@@ -200,6 +236,7 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 		assertNotNull(newPersonPut.getFirstName());
 		assertNotNull(newPersonPut.getLastName());
 		assertNotNull(newPersonPut.getGender());
+		assertFalse(newPersonPut.getEnabled());
 		
 		assertEquals(oldPerson.getId(), newPerson.getId());
 		
@@ -210,7 +247,7 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	public void delete() throws Exception {
 		given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
@@ -223,12 +260,13 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void findALL() throws Exception {
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParam("page",3,"size",10,"directio","asc")
 				.when()
 				.get()
 				.then()
@@ -238,7 +276,8 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 					.asString();
 				//.as(new TypeRef<List<PersonVO>>() {});
 		
-		List<PersonVO> people = ObjectMapper.readValue(content, new TypeReference<List<PersonVO>>() {});
+		PagedModelPerson wrapper = ObjectMapper.readValue(content, PagedModelPerson.class);
+		var people = wrapper.getContent();
 		PersonVO foundPersonOne = people.get(0);
 		
 		assertNotNull(foundPersonOne);
@@ -246,15 +285,17 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 		assertNotNull(foundPersonOne.getFirstName());
 		assertNotNull(foundPersonOne.getLastName());
 		assertNotNull(foundPersonOne.getGender());
+		assertFalse(foundPersonOne.getEnabled());
 		
 		assertTrue(foundPersonOne.getId() > 0);
 		
-		assertEquals("Ayrton", foundPersonOne.getFirstName());
-		assertEquals("Senna", foundPersonOne.getLastName());
-		assertEquals("São Paulo", foundPersonOne.getAddress());
+		assertEquals(199, foundPersonOne.getId());
+		assertEquals("Allin", foundPersonOne.getFirstName());
+		assertEquals("Otridge", foundPersonOne.getLastName());
+		assertEquals("09846 Independence Center", foundPersonOne.getAddress());
 		assertEquals("Male", foundPersonOne.getGender());
 	}
-	@Order(6)
+	@Order(7)
 	public void findAllWithoutToken() throws Exception {
 		
 		RequestSpecification specificationWithoutToken = specification = new RequestSpecBuilder()
@@ -275,7 +316,6 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 		person.setLastName("Man");
 		person.setAddress("Metropolis");
 		person.setGender("Male");
-
-	}
-
+		person.setEnabled(true);
+}
 }

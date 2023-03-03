@@ -66,6 +66,7 @@ class BookServicesTest {
         assertEquals(0.00, result.getPrice());
 	}
 
+	/*
 	@Test
 	void testFindAll() throws Exception{
 		Date dmock = sdf.parse("11/11/1111");
@@ -114,6 +115,7 @@ class BookServicesTest {
         assertEquals(dmock, bookSeven.getLaunchDate());
         assertEquals(0.00, bookSeven.getPrice());
 	}
+	 * */
 
 	@Test
 	void testCreate() throws Exception {

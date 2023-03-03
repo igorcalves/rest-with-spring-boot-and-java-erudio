@@ -1,6 +1,7 @@
 package br.com.igor.integrationstests.controller.withjson;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +25,7 @@ import br.com.igor.configs.TestConfigs;
 import br.com.igor.data.vo.v1.security.TokenVO;
 import br.com.igor.integrationstests.vo.AccountCredentialsVO;
 import br.com.igor.integrationstests.vo.PersonVO;
+import br.com.igor.integrationstests.vo.wrappers.person.WrapperPersonVO;
 import br.com.igor.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -103,6 +105,41 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(createPerson.getFirstName());
 		assertNotNull(createPerson.getLastName());
 		assertNotNull(createPerson.getGender());
+		assertTrue(createPerson.getEnabled());
+
+		assertTrue(createPerson.getId() > 0);
+
+		assertEquals("Super", createPerson.getFirstName());
+		assertEquals("Man", createPerson.getLastName());
+		assertEquals("Metropolis", createPerson.getAddress());
+		assertEquals("Male", createPerson.getGender());
+	}
+	
+	@Test
+	@Order(2)
+	public void testDisablePersonById() throws Exception {
+
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_IGOR)
+					.pathParam("id", person.getId())
+					.when()
+					.patch("{id}")
+				.then()
+					.statusCode(200)
+						.extract()
+						.body()
+							.asString();
+
+		PersonVO createPerson = ObjectMapper.readValue(content, PersonVO.class);
+		person = createPerson;
+
+		assertNotNull(createPerson);
+		assertNotNull(createPerson.getId());
+		assertNotNull(createPerson.getFirstName());
+		assertNotNull(createPerson.getLastName());
+		assertNotNull(createPerson.getGender());
+		assertFalse(createPerson.getEnabled());
 
 		assertTrue(createPerson.getId() > 0);
 
@@ -115,7 +152,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	
 
 	@Test
-	@Order(2)
+	@Order(3)
 	public void testFindById() throws Exception {
 		mockPerson();
 
@@ -139,6 +176,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(createPerson.getFirstName());
 		assertNotNull(createPerson.getLastName());
 		assertNotNull(createPerson.getGender());
+		assertFalse(createPerson.getEnabled());
+
 
 		assertTrue(createPerson.getId() > 0);
 
@@ -149,7 +188,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(3)
+	@Order(4)
 	public void testUpdate() throws Exception {
 		mockPerson();
 		
@@ -195,6 +234,8 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(newPersonPut.getFirstName());
 		assertNotNull(newPersonPut.getLastName());
 		assertNotNull(newPersonPut.getGender());
+		assertFalse(newPersonPut.getEnabled());
+		
 		
 		assertEquals(oldPerson.getId(), newPerson.getId());
 		
@@ -205,7 +246,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	public void delete() throws Exception {
 		given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -217,11 +258,12 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void findALL() throws Exception {
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParam("page",3,"size",10,"direction","asc")
 				.when()
 				.get()
 				.then()
@@ -231,7 +273,46 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 					.asString();
 				//.as(new TypeRef<List<PersonVO>>() {});
 		
-		List<PersonVO> people = ObjectMapper.readValue(content, new TypeReference<List<PersonVO>>() {});
+		WrapperPersonVO wrapper = ObjectMapper.readValue(content, WrapperPersonVO.class);
+		
+		var people = wrapper.getEnbedded().getPersons();
+		PersonVO foundPersonOne = people.get(0);
+		
+		assertNotNull(foundPersonOne);
+		assertNotNull(foundPersonOne.getId());
+		assertNotNull(foundPersonOne.getFirstName());
+		assertNotNull(foundPersonOne.getLastName());
+		assertNotNull(foundPersonOne.getGender());
+		
+		assertTrue(foundPersonOne.getId() > 0);
+		
+		assertEquals(199, foundPersonOne.getId());
+		assertEquals("Allin", foundPersonOne.getFirstName());
+		assertEquals("Otridge", foundPersonOne.getLastName());
+		assertEquals("09846 Independence Center", foundPersonOne.getAddress());
+		assertEquals("Male", foundPersonOne.getGender());
+	}
+	@Test
+	@Order(7)
+	public void testFindByName() throws Exception {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.accept(TestConfigs.CONTENT_TYPE_JSON)
+				.pathParam("firstName", "ayr")
+				.queryParams("page", 0, "size", 6, "direction", "asc")
+					.when()
+					.get("findPersonByName/{firstName}")
+				.then()
+					.statusCode(200)
+						.extract()
+						.body()
+							.asString();
+				//.as(new TypeRef<List<PersonVO>>() {});
+		
+		WrapperPersonVO wrapper = ObjectMapper.readValue(content, WrapperPersonVO.class);
+		
+		var people = wrapper.getEnbedded().getPersons();
 		PersonVO foundPersonOne = people.get(0);
 		
 		assertNotNull(foundPersonOne);
@@ -247,7 +328,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertEquals("São Paulo", foundPersonOne.getAddress());
 		assertEquals("Male", foundPersonOne.getGender());
 	}
-	@Order(6)
+	@Order(8)
 	public void findAllWithoutToken() throws Exception {
 		
 		RequestSpecification specificationWithoutToken = specification = new RequestSpecBuilder()
@@ -263,11 +344,14 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 				.then()
 				.statusCode(403);
 	}
+
+
 	private void mockPerson() {
 		person.setFirstName("Super");
 		person.setLastName("Man");
 		person.setAddress("Metropolis");
 		person.setGender("Male");
+		person.setEnabled(true);
 
 	}
 

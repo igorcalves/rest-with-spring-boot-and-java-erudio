@@ -3,10 +3,8 @@ package br.com.igor.integrationstests.controller.withYaml;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -23,6 +21,7 @@ import br.com.igor.data.vo.v1.security.TokenVO;
 import br.com.igor.integrationstests.controller.withYml.mapper.YmlMapper;
 import br.com.igor.integrationstests.vo.AccountCredentialsVO;
 import br.com.igor.integrationstests.vo.PersonVO;
+import br.com.igor.integrationstests.vo.pagedmodels.PagedModelPerson;
 import br.com.igor.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
@@ -118,6 +117,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 		assertNotNull(personEntity.getFirstName());
 		assertNotNull(personEntity.getLastName());
 		assertNotNull(personEntity.getGender());
+		assertTrue(personEntity.getEnabled());
 
 		assertTrue(personEntity.getId() > 0);
 
@@ -131,6 +131,44 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 
 	@Test
 	@Order(2)
+	public void testDisablePersonById() throws Exception {
+		mockPerson();
+		
+		var content = given().spec(specification)
+				.config(RestAssuredConfig
+						.config()
+						.encoderConfig(EncoderConfig.encoderConfig()
+								.encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_IGOR)
+				.pathParam("id", person.getId())
+					.when()
+				.patch("{id}")
+					.then()
+					.statusCode(200)
+						.extract()
+							.body()
+								.as(PersonVO.class,objectMapper);
+		
+		
+		
+		assertNotNull(content);
+		assertNotNull(content.getId());
+		assertNotNull(content.getFirstName());
+		assertNotNull(content.getLastName());
+		assertNotNull(content.getGender());
+		assertFalse(content.getEnabled());
+		
+		assertTrue(content.getId() > 0);
+		
+		assertEquals("Super", content.getFirstName());
+		assertEquals("Man", content.getLastName());
+		assertEquals("Metropolis", content.getAddress());
+		assertEquals("Male", content.getGender());
+	}
+	@Test
+	@Order(3)
 	public void testFindById() throws Exception {
 		mockPerson();
 
@@ -158,6 +196,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 		assertNotNull(content.getFirstName());
 		assertNotNull(content.getLastName());
 		assertNotNull(content.getGender());
+		assertFalse(content.getEnabled());
 
 		assertTrue(content.getId() > 0);
 
@@ -168,7 +207,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(3)
+	@Order(4)
 	public void testUpdate() throws Exception {
 		PersonVO OriginPerson = given().spec(specification)
 				.config(RestAssuredConfig
@@ -218,6 +257,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 		assertNotNull(persistedNewPutPerson.getFirstName());
 		assertNotNull(persistedNewPutPerson.getLastName());
 		assertNotNull(persistedNewPutPerson.getGender());
+		assertFalse(persistedNewPutPerson.getEnabled());
 		
 		assertEquals(OriginPerson.getId(), persistedNewPutPerson.getId());
 		
@@ -228,7 +268,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	public void delete() throws Exception {
 		given().spec(specification)
 					.pathParam("id", person.getId())
@@ -239,41 +279,44 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	public void findALL() throws Exception {
 		
-		var content = given().spec(specification)
+		var wrapper = given().spec(specification)
 				.config(RestAssuredConfig
 						.config()
 						.encoderConfig(EncoderConfig.encoderConfig()
 							.encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParam("page",3,"size",10,"directio","asc")
 				.when()
 				.get()
 				.then()
 				.statusCode(200)
 				.extract()
 				.body()
-				.as(PersonVO[].class,objectMapper);
+				.as(PagedModelPerson.class,objectMapper);
 		
-		List<PersonVO> people  = Arrays.asList(content);
-		PersonVO foundPersonOne = people.get(0);
+		var people = wrapper.getContent();
+		PersonVO fourPerson = people.get(0);
 		
-		assertNotNull(foundPersonOne);
-		assertNotNull(foundPersonOne.getId());
-		assertNotNull(foundPersonOne.getFirstName());
-		assertNotNull(foundPersonOne.getLastName());
-		assertNotNull(foundPersonOne.getGender());
+		assertNotNull(fourPerson);
+		assertNotNull(fourPerson.getId());
+		assertNotNull(fourPerson.getFirstName());
+		assertNotNull(fourPerson.getLastName());
+		assertNotNull(fourPerson.getGender());
+		assertFalse(fourPerson.getEnabled());
 		
-		assertTrue(foundPersonOne.getId() > 0);
+		assertTrue(fourPerson.getId() > 0);
 		
-		assertEquals("Ayrton", foundPersonOne.getFirstName());
-		assertEquals("Senna", foundPersonOne.getLastName());
-		assertEquals("São Paulo", foundPersonOne.getAddress());
-		assertEquals("Male", foundPersonOne.getGender());
+		assertEquals(199, fourPerson.getId());
+		assertEquals("Allin", fourPerson.getFirstName());
+		assertEquals("Otridge", fourPerson.getLastName());
+		assertEquals("09846 Independence Center", fourPerson.getAddress());
+		assertEquals("Male", fourPerson.getGender());
 	}
-	@Order(6)
+	@Order(7)
 	public void findAllWithoutToken() throws Exception {
 		
 		RequestSpecification specificationWithoutToken = specification = new RequestSpecBuilder()
@@ -298,7 +341,7 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 		person.setLastName("Man");
 		person.setAddress("Metropolis");
 		person.setGender("Male");
+		person.setEnabled(true);
 
-	}
-
+}
 }

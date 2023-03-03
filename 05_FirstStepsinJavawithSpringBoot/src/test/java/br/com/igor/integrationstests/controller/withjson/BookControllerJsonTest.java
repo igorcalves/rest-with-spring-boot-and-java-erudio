@@ -25,6 +25,7 @@ import br.com.igor.configs.TestConfigs;
 import br.com.igor.data.vo.v1.security.TokenVO;
 import br.com.igor.integrationstests.vo.AccountCredentialsVO;
 import br.com.igor.integrationstests.vo.BookVO;
+import br.com.igor.integrationstests.vo.wrappers.books.WrapperBookVO;
 import br.com.igor.integrationtest.testcontainers.AbstractIntegrationTest;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -216,6 +217,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 		
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParam("page",0,"size",3,"direction","asc")
 				.when()
 					.get()
 				.then()
@@ -224,7 +226,9 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 							.body()
 								.asString();
 		
-		List<BookVO> people = ObjectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
+		WrapperBookVO wrapper = ObjectMapper.readValue(content, WrapperBookVO.class);
+		assertNotNull(wrapper);
+		var people = wrapper.getEnbedded().getBooks();
 		BookVO foundBookOne = people.get(0);
 		
 		assertNotNull(foundBookOne);
@@ -236,9 +240,9 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 		
 		assertTrue(foundBookOne.getId() > 0);
 		
-		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-		assertEquals(49.00, foundBookOne.getPrice());
-		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals("Big Data: como extrair volume, variedade, velocidade e valor da avalanche de informação cotidiana", foundBookOne.getTitle());
+		assertEquals(54.0, foundBookOne.getPrice());
+		assertEquals("Viktor Mayer-Schonberger e Kenneth Kukier", foundBookOne.getAuthor());
 	}
 	@Order(6)
 	public void findAllWithoutToken() throws Exception {
