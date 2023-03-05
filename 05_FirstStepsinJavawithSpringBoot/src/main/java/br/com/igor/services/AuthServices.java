@@ -36,7 +36,6 @@ public class AuthServices {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 			
 			var user = repository.findByUserName(username);
-			System.out.println(user.getUsername() +" "+ this.getClass());
 			
 			var tokenReponse = new TokenVO();
 			if (user != null) {

@@ -316,7 +316,46 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 		assertEquals("09846 Independence Center", fourPerson.getAddress());
 		assertEquals("Male", fourPerson.getGender());
 	}
+	@Test
 	@Order(7)
+	public void testFindByName() throws Exception {
+		
+		var wrapper = given().spec(specification)
+				.config(RestAssuredConfig
+						.config()
+						.encoderConfig(EncoderConfig.encoderConfig()
+								.encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.pathParam("firstName", "Alli")
+				.queryParam("page",0,"size",10,"directio","asc")
+				.when()
+				.get("findPersonByName/{firstName}")
+				.then()
+				.statusCode(200)
+				.extract()
+				.body()
+				.as(PagedModelPerson.class,objectMapper);
+		
+		var people = wrapper.getContent();
+		PersonVO fourPerson = people.get(0);
+		
+		assertNotNull(fourPerson);
+		assertNotNull(fourPerson.getId());
+		assertNotNull(fourPerson.getFirstName());
+		assertNotNull(fourPerson.getLastName());
+		assertNotNull(fourPerson.getGender());
+		assertFalse(fourPerson.getEnabled());
+		
+		assertTrue(fourPerson.getId() > 0);
+		
+		assertEquals(199, fourPerson.getId());
+		assertEquals("Allin", fourPerson.getFirstName());
+		assertEquals("Otridge", fourPerson.getLastName());
+		assertEquals("09846 Independence Center", fourPerson.getAddress());
+		assertEquals("Male", fourPerson.getGender());
+	}
+	@Order(8)
 	public void findAllWithoutToken() throws Exception {
 		
 		RequestSpecification specificationWithoutToken = specification = new RequestSpecBuilder()
@@ -335,6 +374,53 @@ public class PersonControllerYmlTest extends AbstractIntegrationTest {
 				.get()
 				.then()
 				.statusCode(403);
+	}
+	
+	@Test
+	@Order(9)
+	public void testHATEOAS() throws Exception {
+		
+		var content = given().spec(specification)
+				.config(RestAssuredConfig
+						.config()
+						.encoderConfig(EncoderConfig.encoderConfig()
+							.encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParam("page",3,"size",10,"directio","asc")
+				.when()
+				.get()
+				.then()
+				.statusCode(200)
+				.extract()
+				.body()
+				.asString();
+		
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/person/v1/199\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/person/v1/797\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/person/v1/686\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/person/v1/209\""));
+		
+		assertTrue(content.contains("rel: \"first\"\n"
+				+ "  href: \"http://localhost:8888/api/person/v1?direction=asc&page=0&size=12&sort=firstName,asc\""));
+		assertTrue(content.contains("rel: \"prev\"\n"
+				+ "  href: \"http://localhost:8888/api/person/v1?direction=asc&page=2&size=12&sort=firstName,asc\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "  href: \"http://localhost:8888/api/person/v1?page=3&size=12&direction=asc\""));
+		assertTrue(content.contains("rel: \"next\"\n"
+				+ "  href: \"http://localhost:8888/api/person/v1?direction=asc&page=4&size=12&sort=firstName,asc\""));
+		assertTrue(content.contains("rel: \"last\"\n"
+				+ "  href: \"http://localhost:8888/api/person/v1?direction=asc&page=83&size=12&sort=firstName,asc\""));
+
+		assertTrue(content.contains("page:\n"
+				+ "  size: 12\n"
+				+ "  totalElements: 1008\n"
+				+ "  totalPages: 84\n"
+				+ "  number: 3"));
 	}
 	private void mockPerson() {
 		person.setFirstName("Super");
