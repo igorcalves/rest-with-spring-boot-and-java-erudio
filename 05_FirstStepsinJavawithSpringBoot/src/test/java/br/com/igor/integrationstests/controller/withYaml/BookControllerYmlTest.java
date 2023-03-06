@@ -293,6 +293,51 @@ public class BookControllerYmlTest extends AbstractIntegrationTest {
 				.statusCode(403);
 	}
 	
+	@Test
+	@Order(9)
+	public void testHATEOAS() throws Exception {
+		
+		var content = given().spec(specification)
+				.config(RestAssuredConfig
+						.config()
+						.encoderConfig(EncoderConfig.encoderConfig()
+							.encodeContentTypeAs(TestConfigs.CONTENT_TYPE_YML, ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParam("page",0,"size",10,"directio","asc")
+				.when()
+				.get()
+				.then()
+				.statusCode(200)
+				.extract()
+				.body()
+				.asString();
+		
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/book/v1/12\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/book/v1/3\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/book/v1/5\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "    href: \"http://localhost:8888/api/book/v1/2\""));
+		
+		assertTrue(content.contains("rel: \"first\"\n"
+				+ "  href: \"http://localhost:8888/api/book/v1?direction=asc&page=0&size=12&sort=title,asc\""));
+		assertTrue(content.contains("rel: \"self\"\n"
+				+ "  href: \"http://localhost:8888/api/book/v1?page=0&size=12&direction=asc\""));
+		assertTrue(content.contains("rel: \"next\"\n"
+				+ "  href: \"http://localhost:8888/api/book/v1?direction=asc&page=1&size=12&sort=title,asc\""));
+		assertTrue(content.contains("rel: \"last\"\n"
+				+ "  href: \"http://localhost:8888/api/book/v1?direction=asc&page=1&size=12&sort=title,asc\""));
+
+		assertTrue(content.contains("page:\n"
+				+ "  size: 12\n"
+				+ "  totalElements: 15\n"
+				+ "  totalPages: 2\n"
+				+ "  number: 0"));
+	}
+	
 	private void mockBook() throws Exception {
 	book.setTitle("Naruto");
 	book.setPrice(20.00);

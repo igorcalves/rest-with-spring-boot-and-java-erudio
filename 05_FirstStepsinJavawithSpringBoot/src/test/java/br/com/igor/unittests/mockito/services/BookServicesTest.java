@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -66,56 +65,6 @@ class BookServicesTest {
         assertEquals(0.00, result.getPrice());
 	}
 
-	/*
-	@Test
-	void testFindAll() throws Exception{
-		Date dmock = sdf.parse("11/11/1111");
-		List<Book> list = input.mockEntityList();
-
-		when(repository.findAll()).thenReturn(list);
-
-		var books = service.findAll();
-
-		assertNotNull(books);
-		assertEquals(14, books.size());
-
-		var bookOne = books.get(1);
-
-		assertNotNull(bookOne);
-		assertNotNull(bookOne.getKey());
-		assertNotNull(bookOne.getLinks());
-		assertTrue(bookOne.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
-		assertEquals(1, bookOne.getKey());
-        assertEquals("Authro Test1", bookOne.getAuthor());
-        assertEquals("Text Test1", bookOne.getTitle());
-        assertEquals(dmock, bookOne.getLaunchDate());
-        assertEquals(0.00, bookOne.getPrice());
-        
-		var bookFour = books.get(4);
-
-		assertNotNull(bookFour);
-		assertNotNull(bookFour.getKey());
-		assertNotNull(bookFour.getLinks());
-		assertTrue(bookFour.toString().contains("links: [</api/book/v1/4>;rel=\"self\"]"));
-		assertEquals(4, bookFour.getKey());
-        assertEquals("Authro Test4", bookFour.getAuthor());
-        assertEquals("Text Test4", bookFour.getTitle());
-        assertEquals(dmock, bookFour.getLaunchDate());
-        assertEquals(0.00, bookFour.getPrice());
-
-		var bookSeven = books.get(7);
-
-		assertNotNull(bookSeven);
-		assertNotNull(bookSeven.getKey());
-		assertNotNull(bookSeven.getLinks());
-		assertTrue(bookSeven.toString().contains("links: [</api/book/v1/7>;rel=\"self\"]"));
-		assertEquals(7, bookSeven.getKey());
-        assertEquals("Authro Test7", bookSeven.getAuthor());
-        assertEquals("Text Test7", bookSeven.getTitle());
-        assertEquals(dmock, bookSeven.getLaunchDate());
-        assertEquals(0.00, bookSeven.getPrice());
-	}
-	 * */
 
 	@Test
 	void testCreate() throws Exception {
