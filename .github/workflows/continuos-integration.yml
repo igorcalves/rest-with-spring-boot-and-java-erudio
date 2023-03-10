@@ -1,0 +1,42 @@
+name: Continuos Integration with github Actions
+
+on:
+  push:
+    branches: 
+      - Learn_Docker
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: login to docker hub
+      uses: docker/login-action@v2.1.0
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+      
+    - name: Set up JDK 19
+      uses: actions/setup-java@v3
+      with:
+        java-version: '19'
+        distribution: 'adopt'
+        cache: maven
+        
+    - name: Build Application JAR
+      working-directory: ./rest-with-spring-boot-and-java-igor/05_FirstStepsinJavawithSpringBoot
+      run: mvn clean package
+      
+    - name: Docker compose build
+      working-directory: ./rest-with-spring-boot-and-java-igor
+      run: docker compose build
+    
+    - name: push to Docker Hub Container Registry
+      run: |
+        docker tag ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-igor:latest ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-igor:${{ github.run_id }}
+        
+        docker push  ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-igor:${{ github.run_id }}
+        docker push  ${{ secrets.DOCKER_USERNAME }}/rest-with-spring-boot-igor:latest
