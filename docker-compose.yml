@@ -19,7 +19,7 @@ services:
     networks:
       - igor-network
   rest-with-spring-boot-igor:
-    image: igorad/rest-with-spring-boot-igor
+    image: igoralves56/rest-with-spring-boot-igor
     restart: always
     build: ./05_FirstStepsinJavawithSpringBoot
     working_dir: /05_FirstStepsinJavawithSpringBoot

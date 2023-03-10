@@ -3,7 +3,7 @@ server:
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://igor.com.br
 file:
-  upload-dir: /Users/igor1/Documents/uploadDir
+  upload-dir: /home/runner/work/rest-with-spring-boot-and-java-igor/uploadDir
 security:
   jwt:
     token:
