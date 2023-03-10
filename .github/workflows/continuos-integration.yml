@@ -2,7 +2,8 @@ name: Continuos Integration with github Actions
 
 on:
   push:
-    branches: 
+    branches:
+      - main
       - Learn_Docker
   
 jobs:
