@@ -29,11 +29,11 @@ jobs:
 
 
     - name: Build Application JAR
-      working-directory: ./rest-with-spring-boot-and-java-igor/05_FirstStepsinJavawithSpringBoot
+      working-directory: ./05_FirstStepsinJavawithSpringBoot
       run: mvn clean package
       
     - name: Docker compose build
-      working-directory: ./rest-with-spring-boot-and-java-igor
+      working-directory: .
       run: docker compose build
     
     - name: push to Docker Hub Container Registry
