@@ -26,13 +26,14 @@ jobs:
         java-version: '19'
         distribution: 'adopt'
         cache: maven
-        
+
+
     - name: Build Application JAR
-      working-directory: ./MyApi/FirstStepsinJavawithSpringBoot
+      working-directory: ./rest-with-spring-boot-and-java-igor/05_FirstStepsinJavawithSpringBoot
       run: mvn clean package
       
     - name: Docker compose build
-      working-directory: ./MyApi
+      working-directory: ./rest-with-spring-boot-and-java-igor
       run: docker compose build
     
     - name: push to Docker Hub Container Registry
