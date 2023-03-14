@@ -28,11 +28,11 @@ jobs:
         cache: maven
         
     - name: Build Application JAR
-      working-directory: ./rest-with-spring-boot-and-java-igor/MyApi/FirstStepsinJavawithSpringBoot
+      working-directory: ./MyApi/FirstStepsinJavawithSpringBoot
       run: mvn clean package
       
     - name: Docker compose build
-      working-directory: ./rest-with-spring-boot-and-java-igor/MyApi
+      working-directory: ./MyApi
       run: docker compose build
     
     - name: push to Docker Hub Container Registry
