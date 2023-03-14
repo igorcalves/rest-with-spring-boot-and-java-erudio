@@ -21,8 +21,8 @@ services:
   rest-with-spring-boot-igor:
     image: igoralves56/rest-with-spring-boot-igor
     restart: always
-    build: ./05_FirstStepsinJavawithSpringBoot
-    working_dir: /05_FirstStepsinJavawithSpringBoot
+    build: ./MyApi/FirstStepsinJavawithSpringBoot
+    working_dir: ./MyApi/FirstStepsinJavawithSpringBoot
     environment:
       TZ: America/Sao_paulo
       SPRING.DATASOURCE.URL: jdbc:mysql://db:3308/rest_with_spring_boot_igor?useTimezone=true&serverTimezone=UTC
