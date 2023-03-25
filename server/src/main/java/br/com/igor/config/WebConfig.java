@@ -32,12 +32,14 @@ public class WebConfig implements WebMvcConfigurer {
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 		converters.add(new YamilJackson2HttpMessasgeConverter());
 	}
+	
 	private ObjectMapper objectMapper() {
 		var builder = new Jackson2ObjectMapperBuilder();
 		builder.modules(new JavaTimeModule());
 		builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		return builder.build();
 	}
+	
 	
 	
 	
