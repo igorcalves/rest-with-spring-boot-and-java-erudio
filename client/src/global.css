@@ -27,7 +27,7 @@ form input{
     color: #333333;
     border: 1px solid #DCDCE6;
     border-radius: 8px;
-    padding: 0 24 px;
+    padding: 0 24px;
     margin-top: 16px;
 }
 
@@ -45,6 +45,7 @@ form input{
     font-size: 18px;
     line-height: 60px;
     transition: filter 0.2s;
+    color: #F0F0F5;
 }
 
 .button:hover{
